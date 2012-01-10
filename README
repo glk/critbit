@@ -1,0 +1,11 @@
+Crit-bit tree
+
+http://cr.yp.to/critbit.html
+https://github.com/agl/critbit
+
+Original code is taken from Dan Bernstein's qhasm. Adam Langley's CWEB sources
+were converted to human parsable C adding easy to use interface for string,
+buffer and integer keys.
+
+This code, like Prof. Bernstein's original code, is released into the public
+domain.
