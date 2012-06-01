@@ -5,7 +5,6 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
-#include <sys/tree.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -14,10 +13,15 @@
 #include <string.h>
 
 #include "critbit.h"
+
 #define RB_COMPACT
 #include "critbit-test-rb.h"
-
+#include "critbit-test-tree.h"
 #include "critbit-test-data.h"
+
+#ifndef __unused
+#define __unused
+#endif
 
 static const char *elems[] = {
 	"a", "aa", "b", "bb", "ab", "ba", "aba", "bab", NULL

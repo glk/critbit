@@ -96,13 +96,13 @@ critbit_str_keybuf(const struct critbit_key *key)
 }
 
 static __inline size_t
-critbit_buf_keylen(struct critbit_tree *t, const uint8_t *a __unused)
+critbit_buf_keylen(struct critbit_tree *t, const uint8_t *a CRITBIT_UNUSED)
 {
 	return (t->ct_keylen);
 }
 
 static __inline size_t
-critbit_str_keylen(struct critbit_tree *t __unused, const uint8_t *a)
+critbit_str_keylen(struct critbit_tree *t CRITBIT_UNUSED, const uint8_t *a)
 {
 	return (strlen((char *)a));
 }

@@ -1,4 +1,4 @@
-PROG= crtibit-test
+PROG= critbit-test
 SRCS= critbit.c critbit.h critbit-test.c
 
 DEBUG_FLAGS=-g

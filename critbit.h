@@ -6,6 +6,21 @@
 #ifndef CRITBIT_H_
 #define CRITBIT_H_
 
+#include <stddef.h>
+
+#ifndef CRITBIT_UNUSED
+#ifndef __unused
+#define CRITBIT_UNUSED
+#else
+#define CRITBIT_UNUSED		__unused
+#endif
+#endif
+
+#ifndef __XCONCAT
+#define __XCONCAT1(x,y)		x ## y
+#define __XCONCAT(x,y)		__XCONCAT1(x,y)
+#endif
+
 __BEGIN_DECLS
 
 struct critbit_key;
@@ -58,16 +73,18 @@ CRITBIT_HEAD(name) {							\
 }
 
 #define CRITBIT_PROTOTYPE_INLINE(name, type, keytype)			\
-CRITBIT_PROTOTYPE_INTERNAL(name, type, keytype, __unused static __inline)
+CRITBIT_PROTOTYPE_INTERNAL(name, type, keytype,				\
+    CRITBIT_UNUSED static __inline)
 
 #define CRITBIT_GENERATE_INLINE(name, type, keytype, field)		\
-CRITBIT_GENERATE_INTERNAL(name, type, keytype, field, __unused static __inline)
+CRITBIT_GENERATE_INTERNAL(name, type, keytype, field,			\
+    CRITBIT_UNUSED static __inline)
 
 #define CRITBIT_PROTOTYPE_STATIC(name, type, keytype)			\
-CRITBIT_PROTOTYPE_INTERNAL(name, type, keytype, __unused static)
+CRITBIT_PROTOTYPE_INTERNAL(name, type, keytype, CRITBIT_UNUSED static)
 
 #define CRITBIT_GENERATE_STATIC(name, type, keytype, field)		\
-CRITBIT_GENERATE_INTERNAL(name, type, keytype, field, __unused static)
+CRITBIT_GENERATE_INTERNAL(name, type, keytype, field, CRITBIT_UNUSED static)
 
 #define CRITBIT_PROTOTYPE_INTERNAL(name, type, keytype, attr)		\
 CRITBIT_HEAD_PROTOTYPE(name);						\
@@ -113,11 +130,11 @@ attr struct type *name##_critbit_remove(CRITBIT_HEAD(name) *head,	\
 }
 
 #define CRITBIT_METHOD(keytype, method)					\
-__CONCAT(__CONCAT(critbit_,keytype),_##method)
+__XCONCAT(__XCONCAT(critbit_,keytype),_##method)
 
 #define CRITBIT_CAST(type, field, val)					\
 (val == NULL ? NULL : (struct type *)(void *)(((char *)val -		\
-    __offsetof(struct type, field))))
+    offsetof(struct type, field))))
 
 #define CRITBIT_INIT(name, head, nfree, freearg)			\
 critbit_init(&((head)->treehead), (nfree), (freearg), name##_critbit_keylen())
@@ -133,7 +150,7 @@ critbit_init(&((head)->treehead), (nfree), (freearg), name##_critbit_keylen())
 #define CRITBIT_KEYREF_int32(a)		CRITBIT_KEYREF_scalar(a)
 #define CRITBIT_KEYREF_int64(a)		CRITBIT_KEYREF_scalar(a)
 #define CRITBIT_KEYREF_intptr(a)	CRITBIT_KEYREF_scalar(a)
-#define CRITBIT_KEYREF_ptr(a)		CRITBIT_KEYREF_scalar((intptr_t)a)
+#define CRITBIT_KEYREF_ptr(a)		CRITBIT_KEYREF_scalar((intptr_t)(a))
 
 #define CRITBIT_KEYTYPE_buf		const void *
 #define CRITBIT_KEYTYPE_str		const char *
