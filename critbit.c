@@ -104,7 +104,7 @@ critbit_buf_keylen(struct critbit_tree *t, const uint8_t *a __unused)
 static __inline size_t
 critbit_str_keylen(struct critbit_tree *t __unused, const uint8_t *a)
 {
-	return (strlen(a));
+	return (strlen((char *)a));
 }
 
 static __inline int
@@ -119,7 +119,7 @@ critbit_str_keycmp(const uint8_t *a, const uint8_t *b, size_t blen)
 	size_t alen;
 	int rv;
 
-	alen = strlen(a);
+	alen = strlen((char *)a);
 	rv = alen - blen;
 	if (rv != 0)
 		return (rv);
@@ -313,7 +313,8 @@ critbit_buf_remove(struct critbit_tree *t, const void *key)
 void *
 critbit_str_get(struct critbit_tree *t, const char *key)
 {
-	return (critbit_get_impl(t, key, critbit_str_keylen(t, key),
+	return (critbit_get_impl(t, key,
+	    critbit_str_keylen(t, (const uint8_t *)key),
 	    critbit_str_keycmp, critbit_str_keybuf));
 }
 
@@ -322,13 +323,14 @@ critbit_str_insert(struct critbit_tree *t,
     struct critbit_node *newnode, const char **key)
 {
 	return (critbit_insert_impl(t, newnode, (const struct critbit_key *)key,
-	    critbit_str_keylen(t, *key), critbit_str_keybuf));
+	    critbit_str_keylen(t, (const uint8_t *)*key), critbit_str_keybuf));
 }
 
 void *
 critbit_str_remove(struct critbit_tree *t, const char *key)
 {
-	return (critbit_remove_impl(t, key, critbit_str_keylen(t, key),
+	return (critbit_remove_impl(t, key,
+	    critbit_str_keylen(t, (const uint8_t *)key),
 	    critbit_str_keycmp, critbit_str_keybuf));
 }
 
