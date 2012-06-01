@@ -28,7 +28,7 @@ struct critbit_node {
 
 typedef size_t critbit_keylen_t(const uint8_t *a);
 
-typedef uint8_t *critbit_keybuf_t(struct critbit_key *key);
+typedef const uint8_t *critbit_keybuf_t(const struct critbit_key *key);
 
 typedef int critbit_keycmp_t(const uint8_t *a, const uint8_t *b, size_t blen);
 
@@ -67,7 +67,7 @@ critbit_ref_set_node(struct critbit_ref **ref, struct critbit_node *node)
 }
 
 static __inline void
-critbit_ref_set_key(struct critbit_ref **ref, struct critbit_key *key)
+critbit_ref_set_key(struct critbit_ref **ref, const struct critbit_key *key)
 {
 	*ref = (struct critbit_ref *)key;
 	CRITBIT_ASSERT(!critbit_ref_is_internal(*ref));
@@ -83,14 +83,14 @@ critbit_ref_get_key(struct critbit_ref *ref)
 	return (key);
 }
 
-static __inline uint8_t *
-critbit_buf_keybuf(struct critbit_key *key)
+static __inline const uint8_t *
+critbit_buf_keybuf(const struct critbit_key *key)
 {
-	return ((uint8_t *)(key));
+	return ((const uint8_t *)(key));
 }
 
-static __inline uint8_t *
-critbit_str_keybuf(struct critbit_key *key)
+static __inline const uint8_t *
+critbit_str_keybuf(const struct critbit_key *key)
 {
 	return (*(uint8_t **)(key));
 }
@@ -168,12 +168,12 @@ critbit_get_impl(struct critbit_tree *t, const void *key, size_t keylen,
 
 static __inline struct critbit_key *
 critbit_insert_impl(struct critbit_tree *t, struct critbit_node *newnode,
-    struct critbit_key *key, size_t keylen, critbit_keybuf_t *keybuf)
+    const struct critbit_key *key, size_t keylen, critbit_keybuf_t *keybuf)
 {
 	const uint8_t *const ubytes = keybuf(key);
 	struct critbit_node *q;
 	struct critbit_ref *p;
-	uint8_t *pkey;
+	const uint8_t *pkey;
 	uint32_t newbyte;
 	uint32_t newotherbits;
 	uint8_t c;
@@ -297,10 +297,10 @@ critbit_buf_get(struct critbit_tree *t, const void *key)
 
 void *
 critbit_buf_insert(struct critbit_tree *t,
-    struct critbit_node *newnode, void *key)
+    struct critbit_node *newnode, const void *key)
 {
-	return (critbit_insert_impl(t, newnode, key, critbit_buf_keylen(t, key),
-	    critbit_buf_keybuf));
+	return (critbit_insert_impl(t, newnode, (const struct critbit_key *)key,
+	    critbit_buf_keylen(t, NULL), critbit_buf_keybuf));
 }
 
 void *
@@ -319,9 +319,9 @@ critbit_str_get(struct critbit_tree *t, const char *key)
 
 void *
 critbit_str_insert(struct critbit_tree *t,
-    struct critbit_node *newnode, char **key)
+    struct critbit_node *newnode, const char **key)
 {
-	return (critbit_insert_impl(t, newnode, (struct critbit_key *)key,
+	return (critbit_insert_impl(t, newnode, (const struct critbit_key *)key,
 	    critbit_str_keylen(t, *key), critbit_str_keybuf));
 }
 

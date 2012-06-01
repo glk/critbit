@@ -25,7 +25,7 @@ static const char *elems[] = {
 
 struct element {
 	int pad;
-	char *k;
+	const char *k;
 	int64_t kint;
 	RB_ENTRY(element) rbentry;
 	rb_node(struct element) nrb_link;
@@ -87,7 +87,7 @@ test_contains(void)
 
 	for (i = 0; elems[i]; ++i) {
 		el = el_alloc();
-		el->k = __DECONST(char *, elems[i]);
+		el->k = elems[i];
 		nnode = malloc(critbit_node_size());
 		CRITBIT_INSERT(eltree, &tree, nnode, el);
 	}
@@ -113,7 +113,7 @@ test_delete(void)
 
 		for (j = 0; j < i; ++j) {
 			el = el_alloc();
-			el->k = __DECONST(char *, elems[j]);
+			el->k = elems[j];
 			nnode = malloc(critbit_node_size());
 			el = CRITBIT_INSERT(eltree, &tree, nnode, el);
 			if (el != NULL)
@@ -366,7 +366,7 @@ test_benchmark_critbit(void)
 again:
 	for (i = 0; i < cnt; ++i) {
 		el = &test_data_el[i];
-		el->k = __DECONST(char *, test_data[i]);
+		el->k = test_data[i];
 		nnode = malloc(critbit_node_size());
 		CRITBIT_INSERT(eltree, &tree, nnode, el);
 	}
@@ -421,19 +421,19 @@ test_benchmark_rbtree(void)
 again:
 	for (i = 0; i < cnt; ++i) {
 		el = &test_data_el[i];
-		el->k = __DECONST(char *, test_data[i]);
+		el->k = test_data[i];
 		RB_INSERT(rbtree, &tree, el);
 	}
 
 	for (i = cnt - 1; i >= 0; i--) {
-		find.k = __DECONST(char *, test_data[i]);
+		find.k = test_data[i];
 		el = RB_FIND(rbtree, &tree, &find);
 		if (el == NULL)
 			abort();
 	}
 
 	for (i = 3; i < cnt; i += 5) {
-		find.k = __DECONST(char *, test_data[i]);
+		find.k = test_data[i];
 		el = RB_FIND(rbtree, &tree, &find);
 		if (el == NULL)
 			abort();
@@ -441,12 +441,12 @@ again:
 	}
 
 	for (i = 2; i < cnt; i += 3) {
-		find.k = __DECONST(char *, test_data[i]);
+		find.k = test_data[i];
 		el = RB_FIND(rbtree, &tree, &find);
 	}
 
 	for (i = 0; i < cnt; i ++) {
-		find.k = __DECONST(char *, test_data[i]);
+		find.k = test_data[i];
 		el = RB_FIND(rbtree, &tree, &find);
 		if (el != NULL)
 			RB_REMOVE(rbtree, &tree, el);

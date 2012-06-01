@@ -35,7 +35,7 @@ void critbit_buf_init(struct critbit_tree *t, critbit_node_free_t *nfree,
 void *critbit_buf_get(struct critbit_tree *t, const void *key);
 
 void *critbit_buf_insert(struct critbit_tree *t,
-    struct critbit_node *newnode, void *key);
+    struct critbit_node *newnode, const void *key);
 
 void *critbit_buf_remove(struct critbit_tree *t, const void *key);
 
@@ -45,7 +45,7 @@ void critbit_str_init(struct critbit_tree *t,
 void *critbit_str_get(struct critbit_tree *t, const char *key);
 
 void *critbit_str_insert(struct critbit_tree *t,
-    struct critbit_node *newnode, char **key);
+    struct critbit_node *newnode, const char **key);
 
 void *critbit_str_remove(struct critbit_tree *t, const char *key);
 
