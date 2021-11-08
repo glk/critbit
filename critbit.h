@@ -21,7 +21,9 @@
 #define __XCONCAT(x,y)		__XCONCAT1(x,y)
 #endif
 
-__BEGIN_DECLS
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct critbit_key;
 struct critbit_node;
@@ -168,6 +170,8 @@ name##_critbit_insert((tree), (newnode), (key))
 #define CRITBIT_REMOVE(name, tree, key)					\
 name##_critbit_remove((tree), (key))
 
-__END_DECLS
+#ifdef __cplusplus
+}
+#endif
 
 #endif
