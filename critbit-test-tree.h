@@ -30,7 +30,9 @@
 #ifndef	_SYS_TREE_H_
 #define	_SYS_TREE_H_
 
+#ifdef __FreeBSD__
 #include <sys/cdefs.h>
+#endif
 
 /*
  * This file defines data structures for different types of trees:
