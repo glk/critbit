@@ -166,6 +166,20 @@ critbit_get_impl(struct critbit_tree *t, const void *key, size_t keylen,
 	return (NULL);
 }
 
+/* returns most significant bit set to one in an uint8.
+   the gnuc version is 10% faster on x86_64. */
+static __inline uint8_t ms1b8(uint8_t v) {
+	uint32_t value = v;
+#ifdef __GNUC__
+	return value ? 1 << (31 - __builtin_clz(value)) : 0;
+#else
+	value |= value>>1;
+	value |= value>>2;
+	value |= value>>4;
+	return value & ~(value>>1);
+#endif
+}
+
 static __inline struct critbit_key *
 critbit_insert_impl(struct critbit_tree *t, struct critbit_node *newnode,
     const struct critbit_key *key, size_t keylen, critbit_keybuf_t *keybuf)
@@ -214,10 +228,7 @@ critbit_insert_impl(struct critbit_tree *t, struct critbit_node *newnode,
 
 different_byte_found:
 
-	while ((newotherbits & (newotherbits - 1)) != 0)
-		newotherbits &= newotherbits - 1;
-
-	newotherbits ^= 255;
+	newotherbits = ms1b8(newotherbits) ^ 255;
 	const int newdirection = (1 + (newotherbits | pkey[newbyte])) >> 8;
 
 	newnode->byte = newbyte;
